@@ -1,6 +1,7 @@
 using api.data;
 using api.Entities.properties;
-using Microsoft.EntityFrameworkCore;
+using api.Extensions;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi.Models;
 
 namespace API
@@ -17,16 +18,17 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(options =>
-            {
-                options.UseSqlite(_config.GetConnectionString("DefaultConnection"));
-            });
+            services.AddApplicationServices(_config);
+            services.AddIdentityServices(_config);
             services.AddControllers();
             services.AddCors();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
-            });
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" }));
+
+        }
+
+        private void JwtBearerDefault(AuthenticationOptions obj)
+        {
+            throw new NotImplementedException();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +56,8 @@ namespace API
                             .Get<ClientProperties>().BaseClientUrl
                             )
                 );
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
