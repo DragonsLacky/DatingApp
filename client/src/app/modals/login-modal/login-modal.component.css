@@ -1,0 +1,8 @@
+.x-hover:hover {
+  color: rgb(99, 99, 99);
+}
+
+.clickable {
+  cursor: pointer;
+  user-select: none;
+}

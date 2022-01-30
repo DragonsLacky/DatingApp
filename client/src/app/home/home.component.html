@@ -1,0 +1,22 @@
+<div class="container">
+  <div *ngIf="!registerMode" class="text-align center">
+    <h1>Find your match</h1>
+    <p>Come on in to view your matchers... all you need to do is sign up</p>
+    <div class="text-center">
+      <button (click)="registerToggle()" class="btn btn-primary btn-lg mr-2">
+        Register
+      </button>
+      <button class="btn btn-primary btn-lg">Learn more</button>
+    </div>
+  </div>
+
+  <div *ngIf="registerMode" class="container">
+    <div class="row justify-content-center">
+      <div class="col-4 py-5 px-2">
+        <app-register-modal
+          (cancelRegister)="cancelRegisterMode($event)"
+        ></app-register-modal>
+      </div>
+    </div>
+  </div>
+</div>
