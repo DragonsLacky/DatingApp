@@ -1,5 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
 import { AccountService } from 'src/app/services/account.service';
 
 @Component({
@@ -14,7 +17,9 @@ export class LoginModalComponent implements OnInit {
 
   constructor(
     private modalService: BsModalService,
-    public accountService: AccountService
+    public accountService: AccountService,
+    private router: Router,
+    private toaster: ToastrService
   ) {}
 
   openModal(template: TemplateRef<any>) {
@@ -27,9 +32,11 @@ export class LoginModalComponent implements OnInit {
     this.accountService.login(this.model).subscribe(
       (response) => {
         console.log(response);
+        this.router.navigateByUrl('/members');
       },
-      (error) => {
+      (error : HttpErrorResponse) => {
         console.log(error);
+        this.toaster.error(error.error);
       }
     );
     this.closeDialog();
@@ -37,6 +44,7 @@ export class LoginModalComponent implements OnInit {
 
   logout(): void {
     this.accountService.logout();
+    this.router.navigateByUrl('/');
   }
 
   closeDialog(): void {

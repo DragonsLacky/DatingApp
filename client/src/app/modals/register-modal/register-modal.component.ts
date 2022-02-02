@@ -7,6 +7,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
 import { AccountService } from 'src/app/services/account.service';
 
 @Component({
@@ -28,7 +29,8 @@ export class RegisterModalComponent implements OnInit {
 
   constructor(
     private modalService: BsModalService,
-    public accountService: AccountService
+    public accountService: AccountService,
+    private toaster: ToastrService
   ) {}
 
   ngOnInit(): void {}
@@ -39,7 +41,10 @@ export class RegisterModalComponent implements OnInit {
         console.log(response);
         this.cancel();
       },
-      (err) => console.log(err)
+      (err) => {
+        console.log(err);
+        this.toaster.error(err.error);
+      }
     );
   }
 

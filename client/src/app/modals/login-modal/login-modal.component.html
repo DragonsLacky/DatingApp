@@ -1,5 +1,5 @@
-<div *ngIf="accountService.currentUser$ | async" class="dropdown" dropdown> 
-  <a dropdownToggle class="clickable dropdown-toggle pointer-event text-decoration-none text-light"> User </a>
+<div *ngIf="(accountService.currentUser$ | async) as user" class="dropdown" dropdown> 
+  <a dropdownToggle class="clickable dropdown-toggle pointer-event text-decoration-none text-light"> Welcome {{user.userName |  titlecase}} </a>
   <div class="dropdown-menu" *dropdownMenu>
     <a class="clickable dropdown-item">Edit Profile</a>
     <div class="dropdown-divider"></div>
@@ -7,7 +7,7 @@
   </div>
 </div>
 
-<div *ngIf="(accountService.currentUser$ | async) === null">
+<ng-container *ngIf="(accountService.currentUser$ | async) === null">
   <button class="btn btn-outline-success" (click)="openModal(template)">
     Login
   </button>
@@ -66,4 +66,4 @@
       </form>
     </div>
   </ng-template>
-</div>
+</ng-container>
