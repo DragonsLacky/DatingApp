@@ -1,0 +1,26 @@
+<div class="container">
+  <h1 class="h2 text-danger mb-5">Error 500: Internal server error</h1>
+  <h2 class="h3 mb-5">Something went wrong on the server</h2>
+  <h3 class="h4 mb-5">Refreshing the page will make the error disappear</h3>
+  <button class="btn btn-lg btn-info mb-5" routerLink="/">
+    Go back to home
+  </button>
+  <ng-container *ngIf="error">
+    <h4 class="text-danger">
+      Error
+      <ng-container *ngIf="error.statusCode">{{
+        error.statusCode
+      }}</ng-container
+      >:
+      <ng-container *ngIf="error.message">{{ error.message }}</ng-container>
+    </h4>
+    <ng-container *ngIf="error.details">
+      <h5>Error Stack Trace:</h5>
+      <p class="rounded-1 p-2" style="background-color: whitesmoke">
+        <code style="background-color: whitesmoke">
+          {{ error.details }}
+        </code>
+      </p>
+    </ng-container>
+  </ng-container>
+</div>
