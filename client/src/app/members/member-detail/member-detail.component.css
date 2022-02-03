@@ -1,0 +1,30 @@
+.img-thumbnail {
+  padding: 0;
+  box-sizing: border-box;
+  border-radius: 0.25rem;
+}
+
+.card-footer {
+  padding: 1.5rem 1rem;
+}
+
+
+.member-tabset tab {
+  padding: 1rem 2.5rem;
+}
+
+.member-tabset ul {
+  display: flex;
+  justify-content: center;
+}
+
+.member-tabset tab h4 {
+  border-bottom: 0.0625rem solid whitesmoke;
+  padding: 0.5rem 0;
+}
+
+.member-tabset tab p {
+  padding: 1em;
+  background-color: whitesmoke;
+  border-radius: 0.5rem;
+}

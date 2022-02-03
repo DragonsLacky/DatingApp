@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-// [Authorize]
+[Authorize]
 public class UsersController : BaseApiController
 {
     private readonly IUserRepository _userRepository;
