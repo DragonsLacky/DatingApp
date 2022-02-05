@@ -1,4 +1,7 @@
 <h1 class="h3 mt-5 mb-3">Members</h1>
-<div class="d-flex flex-wrap " style="gap: 1rem">
-  <app-members-card *ngFor="let member of members" [member]="member"></app-members-card>
+<div class="d-flex flex-wrap" style="gap: 1rem">
+  <app-members-card
+    *ngFor="let member of members$ | async"
+    [member]="member"
+  ></app-members-card>
 </div>

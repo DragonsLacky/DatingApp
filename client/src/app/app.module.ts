@@ -21,6 +21,9 @@ import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { MembersCardComponent } from './members/members-card/members-card.component';
 import { JwtInterceptor } from './interceprots/jwt.interceptor';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { LoadingInterceptor } from './interceprots/loading.interceptor';
 
 @NgModule({
   declarations: [
@@ -37,6 +40,7 @@ import { JwtInterceptor } from './interceprots/jwt.interceptor';
     NotFoundComponent,
     ServerErrorComponent,
     MembersCardComponent,
+    MemberEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,6 +49,7 @@ import { JwtInterceptor } from './interceprots/jwt.interceptor';
     BrowserAnimationsModule,
     FormsModule,
     SharedModule,
+    NgxSpinnerModule,
   ],
   providers: [
     {
@@ -55,6 +60,11 @@ import { JwtInterceptor } from './interceprots/jwt.interceptor';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
       multi: true,
     },
   ],

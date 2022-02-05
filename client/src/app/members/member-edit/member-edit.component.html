@@ -1,0 +1,98 @@
+<div class="container py-4">
+  <div class="row">
+    <div class="col-4">
+      <h1 class="h3">Your Profile</h1>
+    </div>
+    <div class="col-8">
+      <p *ngIf="editForm.dirty" class="alert alert-info">
+        <strong>Information: </strong> You have made changes. Any unsaved
+        changes will be lost
+      </p>
+    </div>
+  </div>
+</div>
+<form #editForm="ngForm" (ngSubmit)="updateMember()">
+  <div class="row" *ngIf="member">
+    <div class="col-sm-12 col-md-4 mb-5">
+      <div class="card">
+        <img
+          src="{{ member.photoUrl || './assets/user.png' }}"
+          alt="{{ member.knownAs }}"
+          class="card-img-top img-thumbnail"
+        />
+        <div class="card-body">
+          <div>
+            <strong>Location:</strong>
+            <div class="form-inline form-group">
+              <label class="form-label" for="city">City:</label>
+              <input
+                class="form-control"
+                name="city"
+                type="text"
+                [(ngModel)]="member.city"
+              />
+            </div>
+            <div class="form-inline form-group">
+              <label for="country">Country:</label>
+              <input
+                class="form-control"
+                name="country"
+                type="text"
+                [(ngModel)]="member.country"
+              />
+            </div>
+          </div>
+          <div>
+            <strong>Age:</strong>
+            <p>{{ member.age }}</p>
+          </div>
+          <div>
+            <strong>Member Last Active:</strong>
+            <p>{{ member.lastActive }}</p>
+          </div>
+          <div>
+            <strong>Member Since:</strong>
+            <p>{{ member.created }}</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button
+            [disabled]="!editForm.dirty"
+            type="submit"
+            class="btn btn-success btn-block"
+          >
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8 col-sm-12">
+      <tabset class="member-tabset">
+        <tab heading="About {{ member.knownAs }}">
+          <h4>Description</h4>
+          <textarea
+            class="form-control form-control-plaintext"
+            name="introduction"
+            [(ngModel)]="member.introduction"
+            rows="6"
+          ></textarea>
+          <h4>Looking for</h4>
+          <textarea
+            class="form-control form-control-plaintext"
+            name="lookingFor"
+            [(ngModel)]="member.lookingFor"
+            rows="6"
+          ></textarea>
+          <h4>Interests</h4>
+          <textarea
+            class="form-control form-control-plaintext"
+            name="interests"
+            [(ngModel)]="member.interests"
+            rows="6"
+          ></textarea>
+        </tab>
+        <tab heading="Edit Photos"> Editing photos </tab>
+      </tabset>
+    </div>
+  </div>
+</form>

@@ -30,11 +30,8 @@ export class LoginModalComponent implements OnInit {
 
   login(): void {
     this.accountService.login(this.model).subscribe(
-      (response) => {
-        console.log(response);
-        this.router.navigateByUrl('/members');
-      },
-      (error : HttpErrorResponse) => {
+      () => this.router.navigateByUrl('/members'),
+      (error: HttpErrorResponse) => {
         console.log(error);
         this.toaster.error(error.error);
       }
