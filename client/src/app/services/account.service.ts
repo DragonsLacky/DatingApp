@@ -18,31 +18,30 @@ export class AccountService {
   constructor(private http: HttpClient) {}
 
   login(model: any) {
-    return this.http.post(`${this.baseUrl}/${this.controller}/login`, model).pipe(
-      map((user: User) => {
-        if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-          this.currentUserSource.next(user);
-        }
-        return user;
-      })
-    );
+    return this.http
+      .post(`${this.baseUrl}/${this.controller}/login`, model)
+      .pipe(
+        map((user: User) => {
+          if (user) {
+            this.setCurrentUser(user);
+          }
+          return user;
+        })
+      );
   }
 
   register(model: any) {
-    return this.http.post(`${this.baseUrl}/${this.controller}/register`, model).pipe(
-      map((user: User) => {
-        if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-          this.currentUserSource.next(user);
-        }
-        return user;
-      })
-    );
+    return this.http
+      .post(`${this.baseUrl}/${this.controller}/register`, model)
+      .pipe(map((user: User) => this.setCurrentUser(user)));
   }
 
   setCurrentUser(user: User) {
-    this.currentUserSource.next(user);
+    if(user) {
+      localStorage.setItem('user', JSON.stringify(user));
+      this.currentUserSource.next(user);
+    }
+    return user;
   }
 
   logout() {

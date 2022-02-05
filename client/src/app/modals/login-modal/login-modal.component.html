@@ -1,7 +1,19 @@
-<div *ngIf="(accountService.currentUser$ | async) as user" class="dropdown" dropdown> 
-  <a dropdownToggle class="clickable dropdown-toggle pointer-event text-decoration-none text-light"> Welcome {{user.userName |  titlecase}} </a>
+<div
+  *ngIf="accountService.currentUser$ | async as user"
+  class="dropdown"
+  dropdown
+>
+  <img class="user-main-image" src="{{ user.photoUrl }}" alt="{{ user.userName }}" />
+  <a
+    dropdownToggle
+    class="clickable dropdown-toggle pointer-event text-decoration-none text-light"
+  >
+    Welcome {{ user.userName | titlecase }}
+  </a>
   <div class="dropdown-menu" *dropdownMenu>
-    <a class="clickable dropdown-item" routerLink="/members/edit">Edit Profile</a>
+    <a class="clickable dropdown-item" routerLink="/members/edit"
+      >Edit Profile</a
+    >
     <div class="dropdown-divider"></div>
     <a (click)="logout()" class="clickable dropdown-item">Log out</a>
   </div>

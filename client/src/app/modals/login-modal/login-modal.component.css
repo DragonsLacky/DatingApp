@@ -6,3 +6,11 @@
   cursor: pointer;
   user-select: none;
 }
+
+.user-main-image {
+  height: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  height: 2rem;
+  margin-right: 0.5rem;
+}

@@ -41,4 +41,16 @@ export class MembersService {
       })
     );
   }
+
+  setMainPhoto(photoId: number) {
+    return this.http.patch(
+      `${this.baseUrl}/${this.controller}/photo/${photoId}`,
+      {}
+    );
+  }
+  deletePhoto(photoId: number) {
+    return this.http.delete(
+      `${this.baseUrl}/${this.controller}/photo/${photoId}`
+    );
+  }
 }

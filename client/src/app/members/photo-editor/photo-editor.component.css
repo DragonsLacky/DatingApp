@@ -1,0 +1,20 @@
+.table-cell-text-fit {
+  width: 100%;
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+img.img-thumbnail {
+  height: 100px;
+  min-width: 100px !important;
+  margin-bottom: 2px;
+}
+
+.nv-file-over {
+  border: solid 4px rgb(135, 191, 255);
+}
+
+input[type="file"] {
+  color: transparent;
+}
