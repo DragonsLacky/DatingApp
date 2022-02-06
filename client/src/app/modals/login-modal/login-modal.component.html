@@ -3,12 +3,16 @@
   class="dropdown"
   dropdown
 >
-  <img class="user-main-image" src="{{ user.photoUrl|| './assets/user.png' }}" alt="{{ user.userName }}" />
+  <img
+    class="user-main-image"
+    src="{{ user.photoUrl || './assets/user.png' }}"
+    alt="{{ user.knownAs }}"
+  />
   <a
     dropdownToggle
     class="clickable dropdown-toggle pointer-event text-decoration-none text-light"
   >
-    Welcome {{ user.userName | titlecase }}
+    Welcome {{ user.knownAs | titlecase }}
   </a>
   <div class="dropdown-menu" *dropdownMenu>
     <a class="clickable dropdown-item" routerLink="/members/edit"
