@@ -3,6 +3,10 @@ import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import {
+  getPaginatedResult,
+  getPaginationHeaders,
+} from '../helpers/pagination.helper';
 import { Member } from '../models/member';
 import { PaginatedResult } from '../models/pagination';
 import { User } from '../models/user';
@@ -16,7 +20,6 @@ export class MembersService {
   private baseUrl = environment.apiUrl;
   private controller = 'Users';
   private cacheSize = 10;
-  members: Member[] = [];
   membersCache = new Map<string, PaginatedResult<Member[]>>();
   user: User;
   userParams: UserParams;
@@ -28,6 +31,7 @@ export class MembersService {
     this.accountService.currentUser$.pipe(take(1)).subscribe((user) => {
       this.user = user;
       this.userParams = new UserParams(user);
+      this.membersCache = new Map<string, PaginatedResult<Member[]>>();
     });
   }
 
@@ -44,28 +48,23 @@ export class MembersService {
   }
 
   getMembers(userParams: UserParams) {
+    console.log(this.membersCache);
     let cachedMembers = this.membersCache.get(userParams.key());
     if (cachedMembers) {
       return of(cachedMembers);
     }
 
-    let params = this.getPaginationHeaders(userParams);
+    let params = this.getUserPaginationHeaders(userParams);
 
-    return this.getPaginatedResult<Member[]>(
+    return getPaginatedResult<Member[]>(
       `${this.baseUrl}/${this.controller}`,
-      params
+      params,
+      this.http
     ).pipe(
       map(
         (response) => this.cacheMembers(userParams.key(), response) && response
       )
     );
-  }
-
-  cacheMembers(key: string, value: PaginatedResult<Member[]>) {
-    if (this.membersCache.size >= this.cacheSize) {
-      this.membersCache.delete(this.membersCache.keys().next()?.value);
-    }
-    return this.membersCache.set(key, value);
   }
 
   getMember(username: string) {
@@ -83,10 +82,10 @@ export class MembersService {
   updateMember(member: Member) {
     return this.http.put(`${this.baseUrl}/${this.controller}`, member).pipe(
       map(() => {
-        const index = this.members.findIndex(
-          (m) => m.userName === member.userName
-        );
-        this.members[index] = member;
+        [...this.membersCache.entries()].map(([key, { items }]) => {
+          const index = items.findIndex((m) => m.userName === member.userName);
+          this.membersCache.get(key).items[index] = member;
+        });
       })
     );
   }
@@ -103,26 +102,14 @@ export class MembersService {
     );
   }
 
-  private getPaginatedResult<T>(url: string, params: HttpParams) {
-    const paginatedResult: PaginatedResult<T> = new PaginatedResult<T>();
-    return this.http
-      .get<T>(url, {
-        observe: 'response',
-        params,
-      })
-      .pipe(
-        map((response) => {
-          paginatedResult.items = response.body;
-          let paginationHeader = response.headers.get('Pagination');
-          if (paginationHeader) {
-            paginatedResult.pagination = JSON.parse(paginationHeader);
-          }
-          return paginatedResult;
-        })
-      );
+  private cacheMembers(key: string, value: PaginatedResult<Member[]>) {
+    if (this.membersCache.size >= this.cacheSize) {
+      this.membersCache.delete(this.membersCache.keys().next()?.value);
+    }
+    return this.membersCache.set(key, value);
   }
 
-  private getPaginationHeaders({
+  private getUserPaginationHeaders({
     pageNumber,
     pageSize,
     minAge,
@@ -132,8 +119,14 @@ export class MembersService {
   }: UserParams) {
     let params = new HttpParams();
 
-    params = params.append('pageNumber', pageNumber.toString());
-    params = params.append('pageSize', pageSize.toString());
+    params = getPaginationHeaders(
+      {
+        pageNumber,
+        pageSize,
+      },
+      params
+    );
+
     params = params.append('minAge', minAge.toString());
     params = params.append('maxAge', maxAge.toString());
     params = params.append('gender', gender);

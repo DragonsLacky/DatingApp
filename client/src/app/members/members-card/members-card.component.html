@@ -16,7 +16,7 @@
         </button>
       </li>
       <li class="list-inline-item">
-        <button class="btn btn-primary btn-sm">
+        <button (click)="likeUser()" class="btn btn-primary btn-sm">
           <i class="fa fa-heart"></i>
         </button>
       </li>
@@ -30,7 +30,7 @@
   <div class="card-body">
     <h6 class="card-title text-center mb-1">
       <i class="fa fa-user mr-2"></i>
-      {{ member.knownAs }}, {{member.age}}
+      {{ member.knownAs }}, {{ member.age }}
     </h6>
     <p class="card-text text-muted text-center">{{ member.city }}</p>
   </div>

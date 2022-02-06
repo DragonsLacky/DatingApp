@@ -1,1 +1,65 @@
-<p>lists works!</p>
+<div class="container">
+  <div class="row mt-5 mb-3">
+    <div class="d-flex">
+      <h1 class="h3">
+        <ng-container *ngIf="likesParams.predicate === 'likedBy'">
+          Members who like me
+        </ng-container>
+        <ng-container *ngIf="likesParams.predicate !== 'likedBy'">
+          Members I like
+        </ng-container>
+      </h1>
+      <div class="d-flex justify-content-center flex-fill">
+        <div class="btn-group">
+          <button
+            type="button"
+            class="btn btn-primary"
+            name="predicate"
+            [(ngModel)]="likesParams.predicate"
+            btnRadio="liked"
+            (click)="loadLikes()"
+            active
+          >
+            My Likes
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            name="predicate"
+            [(ngModel)]="likesParams.predicate"
+            btnRadio="likedBy"
+            (click)="loadLikes()"
+          >
+            Liked By
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="d-flex flex-wrap" style="gap: 1rem">
+      <app-members-card
+        *ngFor="let member of members"
+        [member]="member"
+      ></app-members-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="d-flex justify-content-center" *ngIf="pagination">
+        <pagination
+          [boundaryLinks]="true"
+          [totalItems]="pagination.totalItems"
+          [itemsPerPage]="pagination.itemsPerPage"
+          [(ngModel)]="pagination.currentPage"
+          (pageChanged)="pageChanged($event)"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
+      </div>
+    </div>
+  </div>
+</div>

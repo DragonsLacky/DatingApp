@@ -31,4 +31,8 @@ public class AppUser
     public string City { get; set; }
 
     public virtual ICollection<Photo>? Photos { get; set; }
+
+    public ICollection<UserLike> Liked { get; set; }
+
+    public ICollection<UserLike> LikedBy { get; set; }
 }

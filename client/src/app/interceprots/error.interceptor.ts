@@ -27,8 +27,13 @@ export class ErrorInterceptor implements HttpInterceptor {
               if (error.error.errors) {
                 const errors = Object.values(error.error.errors);
                 throw errors.flat();
+              } else if (typeof error.error === 'object') {
+                this.toaster.error(
+                  error.error.title,
+                  error.error.status.toString()
+                );
               } else {
-                this.toaster.error('Bad Request', error.status.toString());
+                this.toaster.error(error.error, error.status.toString());
               }
               break;
             }
