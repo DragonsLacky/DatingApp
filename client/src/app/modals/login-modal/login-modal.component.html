@@ -3,7 +3,7 @@
   class="dropdown"
   dropdown
 >
-  <img class="user-main-image" src="{{ user.photoUrl }}" alt="{{ user.userName }}" />
+  <img class="user-main-image" src="{{ user.photoUrl|| './assets/user.png' }}" alt="{{ user.userName }}" />
   <a
     dropdownToggle
     class="clickable dropdown-toggle pointer-event text-decoration-none text-light"
