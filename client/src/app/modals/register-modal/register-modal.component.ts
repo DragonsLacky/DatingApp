@@ -9,9 +9,7 @@ import {
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
-  Validator,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
@@ -68,7 +66,6 @@ export class RegisterModalComponent implements OnInit {
         [Validators.required, this.matchValues('password')],
       ],
     });
-    console.log(this.registerForm.status === 'VALID');
     this.registerForm.controls.password.valueChanges.subscribe(() =>
       this.registerForm.controls.confirmPassword.updateValueAndValidity()
     );

@@ -54,13 +54,7 @@ export class LikesService {
   }: LikesParams) {
     let params = new HttpParams();
 
-    params = getPaginationHeaders(
-      {
-        pageNumber,
-        pageSize,
-      },
-      params
-    );
+    params = getPaginationHeaders({ pageNumber, pageSize }, params);
 
     params = params.append('predicate', predicate);
 

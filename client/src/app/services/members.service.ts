@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import {
@@ -67,7 +67,7 @@ export class MembersService {
     );
   }
 
-  getMember(username: string) {
+  getMember(username: string): Observable<Member> {
     const member = [...this.membersCache.values()]
       .reduce((res, { items }) => [...res, ...items], [])
       .find((member: Member) => member.userName === username);
@@ -119,13 +119,7 @@ export class MembersService {
   }: UserParams) {
     let params = new HttpParams();
 
-    params = getPaginationHeaders(
-      {
-        pageNumber,
-        pageSize,
-      },
-      params
-    );
+    params = getPaginationHeaders({ pageNumber, pageSize }, params);
 
     params = params.append('minAge', minAge.toString());
     params = params.append('maxAge', maxAge.toString());

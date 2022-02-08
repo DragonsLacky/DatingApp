@@ -1,5 +1,5 @@
-<div class="row" *ngIf="member">
-  <div class="col-sm-12 col-md-4 mb-5">
+<div class="row">
+  <div *ngIf="member" class="col-sm-12 col-md-4 mb-5">
     <div class="card">
       <img
         src="{{ member.photoUrl || './assets/user.png' }}"
@@ -21,19 +21,26 @@
         </div>
         <div>
           <strong>Member Since:</strong>
-          <p>{{ member.created | date: 'dd MMM yyyy' }}</p>
+          <p>{{ member.created | date: "dd MMM yyyy" }}</p>
         </div>
       </div>
       <div class="card-footer">
         <div class="btn-group d-flex">
-          <button class="btn btn-primary">Like</button>
-          <button class="btn btn-success">Message</button>
+          <button (click)="likeUser()" class="btn btn-primary">Like</button>
+          <button (click)="selectMessagesTab(3)" class="btn btn-success">
+            Message
+          </button>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-md-8 col-sm-12">
-    <tabset class="member-tabset">
+  <div class="col-md-8 col-sm-12 pb-5">
+    <tabset
+      [justified]="true"
+      class="member-tabset"
+      style="height: 100%"
+      #memberTabs
+    >
       <tab heading="About {{ member.knownAs }}">
         <h4>Description</h4>
         <p>{{ member.introduction }}</p>
@@ -51,8 +58,16 @@
           [images]="galleryImages"
         ></ngx-gallery>
       </tab>
-      <tab heading="Messages">
-        <p>Messages here</p>
+      <tab
+        heading="Messages"
+        (selectTab)="onMessageTabActivate()"
+        (deselect)="onMessageTabActivate()"
+        class="h-100 pb-0"
+      >
+        <app-members-messages
+          *ngIf="messageTabActive"
+          [username]="member.userName"
+        ></app-members-messages>
       </tab>
     </tabset>
   </div>

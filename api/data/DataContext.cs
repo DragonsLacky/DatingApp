@@ -14,24 +14,35 @@ public class DataContext : DbContext
     public DbSet<AppUser>? Users { get; set; }
     public DbSet<UserLike> Likes { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    public DbSet<Message> Messages { get; set; }
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(builder);
 
-        modelBuilder.Entity<UserLike>()
+        builder.Entity<UserLike>()
                     .HasKey(k => new { k.SourceUserId, k.LikedUserId });
 
-        modelBuilder.Entity<UserLike>()
+        builder.Entity<UserLike>()
                     .HasOne(ul => ul.SourceUser)
                     .WithMany(ul => ul.Liked)
                     .HasForeignKey(ul => ul.SourceUserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<UserLike>()
+        builder.Entity<UserLike>()
                     .HasOne(ul => ul.LikedUser)
                     .WithMany(ul => ul.LikedBy)
                     .HasForeignKey(ul => ul.LikedUserId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Message>()
+            .HasOne(message => message.Recipient)
+            .WithMany(user => user.MessagesReceived)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Message>()
+            .HasOne(message => message.Sender)
+            .WithMany(user => user.MessagesSent)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
 }

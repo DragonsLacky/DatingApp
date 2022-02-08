@@ -1,0 +1,79 @@
+<div class="container-fluid bg-light h-100 rounded-3">
+  <div class="row h-100 flex-column">
+    <div class="col">
+      <div
+        *ngIf="messages?.length <= 0"
+        class="h-100 d-flex flex-column justify-content-center align-items-center"
+      >
+        <span class="h4"
+          >No messages yet... say hit using the field bellow</span
+        >
+      </div>
+      <div
+        *ngIf="messages?.length > 0"
+        style="gap: 2em; height: 40em"
+        class="d-flex flex-column-reverse overflow-auto px-3"
+      >
+        <div
+          [ngClass]="{
+            'justify-content-start': message.recipientUsername !== username,
+            'justify-content-end': message.recipientUsername === username
+          }"
+          class="d-flex"
+          *ngFor="let message of messages"
+        >
+          <div
+            [ngClass]="{
+              'align-items-baseline': message.recipientUsername !== username,
+              'align-items-end': message.recipientUsername === username
+            }"
+            class="d-flex flex-column"
+          >
+            <p
+              [ngClass]="{
+                'bg-secondary': message.recipientUsername !== username,
+                'bg-info': message.recipientUsername === username
+              }"
+              class="m-0 text-white"
+            >
+              {{ message.content }}
+            </p>
+            <span
+              style="font-size: 0.8em; gap: 0.5em"
+              class="d-flex text-muted align-items-center"
+            >
+              <span>{{ message.messageSent | timeago }}</span>
+              <i
+                [ngClass]="{
+                  'fa-check-circle': message.dateRead,
+                  'fa-check-circle-o': !message.dateRead
+                }"
+                class="fa"
+                style="font-size: 1.2em"
+              ></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col h-100" >
+      <form
+        [formGroup]="registerForm"
+        (ngSubmit)="registerForm.valid && sendMessage()"
+        class="form-inline h-100 d-flex justify-content-center align-items-center"
+      >
+        <div class="d-flex w-100">
+          <app-text-input
+            class="w-100"
+            [formControl]="registerForm.controls['content']"
+          ></app-text-input>
+          <div class="input-group-append">
+            <button class="btn btn-primary px-5" type="submit">
+              <i class="fa fa-angle-double-right"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

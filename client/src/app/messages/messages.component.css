@@ -1,0 +1,7 @@
+.message-row:hover {
+  opacity: 90%;
+}
+
+.username-hover:hover p {
+  text-decoration: underline;
+}

@@ -1,27 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Member } from 'src/app/models/member';
 import { MembersService } from 'src/app/services/members.service';
 import { NgxGalleryOptions } from '@kolkov/ngx-gallery';
 import { NgxGalleryImage } from '@kolkov/ngx-gallery';
 import { NgxGalleryAnimation } from '@kolkov/ngx-gallery';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
+import { LikesService } from 'src/app/services/likes.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-member-detail',
   templateUrl: './member-detail.component.html',
   styleUrls: ['./member-detail.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MemberDetailComponent implements OnInit {
+  @ViewChild('memberTabs', { static: true }) memberTabs: TabsetComponent;
   member: Member;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
+  messageTabActive: boolean = false;
   constructor(
-    private memberService: MembersService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toaster: ToastrService,
+    private likesService: LikesService
   ) {}
 
   ngOnInit(): void {
     this.loadMember();
+
+    this.route.queryParams.subscribe((params) =>
+      params.tab
+        ? this.selectMessagesTab(params.tab)
+        : this.selectMessagesTab(0)
+    );
+
     this.galleryOptions = [
       {
         width: '500px',
@@ -32,6 +46,8 @@ export class MemberDetailComponent implements OnInit {
         preview: false,
       },
     ];
+
+    this.galleryImages = this.getImages();
   }
 
   getImages(): NgxGalleryImage[] {
@@ -43,11 +59,24 @@ export class MemberDetailComponent implements OnInit {
   }
 
   loadMember() {
-    this.memberService
-      .getMember(this.route.snapshot.paramMap.get('username'))
-      .subscribe((member) => {
-        this.member = member;
-        this.galleryImages = this.getImages();
-      });
+    this.route.data.subscribe((data) => {
+      this.member = data.member;
+    });
+  }
+
+  likeUser() {
+    this.likesService
+      .addLike(this.member.userName)
+      .subscribe(() =>
+        this.toaster.success(`You have liked ${this.member.knownAs}`)
+      );
+  }
+
+  selectMessagesTab(tabId: number) {
+    this.memberTabs.tabs[tabId].active = true;
+  }
+
+  onMessageTabActivate() {
+    this.messageTabActive = !this.messageTabActive;
   }
 }
