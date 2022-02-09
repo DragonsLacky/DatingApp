@@ -1,0 +1,17 @@
+<h1 class="h3 my-3">Admin Panel</h1>
+<tabset
+  [justified]="true"
+  class="member-tabset"
+  style="height: 100%"
+>
+  <tab heading="User management" *appHasRole="['Admin']">
+    <div class="container mt-2">
+      <app-user-management></app-user-management>
+    </div>
+  </tab>
+  <tab heading="Photo management">
+    <div class="container mt-2" *appHasRole="['Admin', 'Mod']">
+      <app-photo-management></app-photo-management>
+    </div>
+  </tab>
+</tabset>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AccountService } from '../services/account.service';
 
 @Component({
   selector: 'app-home',
@@ -8,12 +9,13 @@ import { Component, OnInit } from '@angular/core';
 export class HomeComponent implements OnInit {
   registerMode = false;
 
-  constructor() {}
+  constructor(private accountService: AccountService) {}
 
   ngOnInit(): void {}
 
   registerToggle() {
-    this.registerMode = !this.registerMode;
+    this.accountService.openRegisterModal();
+    // this.registerMode = !this.registerMode;
   }
 
   cancelRegisterMode(event: boolean) {

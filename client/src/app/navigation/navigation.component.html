@@ -21,6 +21,11 @@
               >Messages</a
             >
           </li>
+          <li class="nav-item" *appHasRole="['Admin', 'Mod']">
+            <a class="nav-link" routerLinkActive="active" routerLink="/admin"
+              >Admin</a
+            >
+          </li>
           <li class="nav-item">
             <a class="nav-link" routerLinkActive="active" routerLink="/errors"
               >Errors</a
@@ -29,6 +34,34 @@
         </ul>
       </ng-container>
     </div>
-    <app-login-modal></app-login-modal>
+    <div
+      *ngIf="accountService.currentUser$ | async as user"
+      class="dropdown"
+      dropdown
+    >
+      <img
+        class="user-main-image"
+        src="{{ user.photoUrl || './assets/user.png' }}"
+        alt="{{ user.knownAs }}"
+      />
+      <a
+        dropdownToggle
+        class="clickable dropdown-toggle pointer-event text-decoration-none text-light"
+      >
+        Welcome {{ user.knownAs || user.userName  | titlecase }}
+      </a>
+      <div class="dropdown-menu" *dropdownMenu>
+        <a class="clickable dropdown-item" routerLink="/members/edit"
+          >Edit Profile</a
+        >
+        <div class="dropdown-divider"></div>
+        <a (click)="logout()" class="clickable dropdown-item">Log out</a>
+      </div>
+    </div>
+    <ng-container *ngIf="(accountService.currentUser$ | async) === null">
+      <button class="btn btn-outline-success" (click)="showLogin()">
+        Login
+      </button>
+    </ng-container>
   </div>
 </nav>

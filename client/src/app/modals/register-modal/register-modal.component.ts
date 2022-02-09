@@ -21,7 +21,6 @@ import { AccountService } from 'src/app/services/account.service';
   selector: 'app-register-modal',
   templateUrl: './register-modal.component.html',
   styleUrls: ['./register-modal.component.css'],
-  providers: [BsModalService],
 })
 export class RegisterModalComponent implements OnInit {
   @Output() cancelRegister = new EventEmitter();
@@ -30,16 +29,10 @@ export class RegisterModalComponent implements OnInit {
   maxDate: Date;
   validationErrors: string[] = [];
 
-  // openModal(template: TemplateRef<any>) {
-  //   this.modalRef = this.modalService.show(template, {
-  //     class: 'modal-sm modal-dialog-centered',
-  //   });
-  // }
-
   constructor(
-    // private modalService: BsModalService,
     public accountService: AccountService,
     private formBuilderService: FormBuilder,
+    public bsModalRef: BsModalRef,
     private router: Router
   ) {}
 
@@ -82,7 +75,7 @@ export class RegisterModalComponent implements OnInit {
     this.accountService.register(this.registerForm.value).subscribe(
       () => {
         this.router.navigateByUrl('/members');
-        this.cancel();
+        this.closeDialog();
       },
       (error) => {
         this.validationErrors = error;
@@ -90,8 +83,17 @@ export class RegisterModalComponent implements OnInit {
     );
   }
 
-  cancel() {
-    console.log('cancel');
-    this.cancelRegister.emit(false);
+  closeDialog() {
+    this.bsModalRef.hide();
+  }
+
+  close() {
+    this.closeDialog();
+    // console.log('cancel');
+    // this.cancelRegister.emit(false);
+  }
+
+  switchToRegister() {
+    this.accountService.switchModalDialog(this.accountService.registerModalId);
   }
 }

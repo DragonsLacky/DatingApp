@@ -1,7 +1,10 @@
+import { RolesEnum } from "./roles";
+
 export interface User {
   token: string;
-  userName: string;
+  username: string;
   photoUrl: string;
   knownAs: string;
   gender: string;
+  roles: RolesEnum[];
 }

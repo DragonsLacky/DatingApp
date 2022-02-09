@@ -1,5 +1,9 @@
 using System.Text;
+using api.data;
+using api.Entities;
+using api.Entities.enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace api.Extensions;
@@ -8,6 +12,17 @@ public static class IdentityServiceExtensions
 {
     public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
     {
+
+        services.AddIdentityCore<AppUser>(options =>
+        {
+            options.Password.RequireNonAlphanumeric = false;
+        })
+        .AddRoles<AppRole>()
+        .AddRoleManager<RoleManager<AppRole>>()
+        .AddSignInManager<SignInManager<AppUser>>()
+        .AddRoleValidator<RoleValidator<AppRole>>()
+        .AddEntityFrameworkStores<DataContext>();
+
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -20,6 +35,17 @@ public static class IdentityServiceExtensions
                         ValidateAudience = false,
                     };
                 });
+
+        services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole(AppRoleEnum.GetName<AppRoleEnum>(AppRoleEnum.Admin)));
+                options.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole(
+                    AppRoleEnum.GetName<AppRoleEnum>(AppRoleEnum.Admin),
+                    AppRoleEnum.GetName<AppRoleEnum>(AppRoleEnum.Mod)
+                ));
+            }
+        );
+
         return services;
     }
 }

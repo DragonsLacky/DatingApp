@@ -1,0 +1,65 @@
+<div class="row">
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th style="width: 30%">Username</th>
+        <th style="width: 40%">Active Roles</th>
+        <th style="width: 30%"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.username }}</td>
+        <td>
+          <span
+            *ngFor="let role of user.roles"
+            [ngClass]="{
+              'text-danger': user.username !== 'admin',
+              clickable: user.username !== 'admin'
+            }"
+            class="clickable text-danger"
+            (click)="user.username !== 'admin' && removeRole(user, role)"
+            >{{ role }}
+          </span>
+        </td>
+        <td>
+          <form
+            (ngSubmit)="addRole(user)"
+            autocomplete="off"
+            #form="ngForm"
+            class="form-inline justify-content-end"
+            style="gap: 1em"
+          >
+            <div class="form-group">
+              <select
+                class="form-control"
+                name="role"
+                [ngModel]="role[user.username]"
+                (ngModelChange)="role[user.username] = $event"
+              >
+                <option [value]="undefined">-----</option>
+                <option *ngFor="let role of computeRoles(user)" [value]="role">
+                  {{ role }}
+                </option>
+              </select>
+            </div>
+            <div class="input-group-append">
+              <button class="btn btn-success" type="submit">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+            <div class="input-group-append">
+              <button
+                (click)="saveRoles(user)"
+                class="btn btn-info"
+                type="button"
+              >
+                <i class="fa fa-save"></i>
+              </button>
+            </div>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,51 +1,36 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { sleep } from 'src/app/helpers/general';
 import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-login-modal',
   templateUrl: './login-modal.component.html',
   styleUrls: ['./login-modal.component.css'],
-  providers: [BsModalService],
 })
 export class LoginModalComponent implements OnInit {
-  modalRef?: BsModalRef;
   model?: any = {};
 
   constructor(
-    private modalService: BsModalService,
     public accountService: AccountService,
     private router: Router,
-    private toaster: ToastrService
+    private bsModalRef: BsModalRef
   ) {}
 
-  openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, {
-      class: 'modal-sm modal-dialog-centered',
-    });
-  }
-
   login(): void {
-    this.accountService.login(this.model).subscribe(
-      () => this.router.navigateByUrl('/members'),
-      (error: HttpErrorResponse) => {
-        console.log(error);
-        this.toaster.error(error.error);
-      }
-    );
+    this.accountService
+      .login(this.model)
+      .subscribe(() => this.router.navigateByUrl('/members'));
     this.closeDialog();
   }
 
-  logout(): void {
-    this.accountService.logout();
-    this.router.navigateByUrl('/');
+  closeDialog() {
+    this.bsModalRef.hide();
   }
 
-  closeDialog(): void {
-    this.modalRef?.hide();
+  switchToRegister() {
+    this.accountService.switchModalDialog(this.accountService.loginModalId);
   }
 
   ngOnInit(): void {}

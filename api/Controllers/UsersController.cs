@@ -1,5 +1,6 @@
 using api.Dtos;
 using api.Entities;
+using api.Entities.enums;
 using api.Extensions;
 using api.helpers;
 using api.Interface;
