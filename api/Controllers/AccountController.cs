@@ -45,7 +45,7 @@ public class AccountController : BaseApiController
 
         return new UserDto
         {
-            UserName = user.UserName,
+            Username = user.UserName,
             Token = await _tokenService.CreateToken(user),
             KnownAs = user.KnownAs,
             Gender = user.Gender
@@ -67,7 +67,7 @@ public class AccountController : BaseApiController
 
         return new UserDto
         {
-            UserName = user.UserName,
+            Username = user.UserName,
             Token = await _tokenService.CreateToken(user),
             PhotoUrl = user.Photos.FirstOrDefault(photo => photo.IsMain)?.Url,
             KnownAs = user.KnownAs,

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Message } from '../models/message';
 import { MessageParams } from '../models/messageParams';
 import { Pagination } from '../models/pagination';
+import { ConfirmService } from '../services/confirm.service';
 import { MessageService } from '../services/message.service';
 
 @Component({
@@ -16,7 +17,10 @@ export class MessagesComponent implements OnInit {
   messagesParams: MessageParams = new MessageParams();
   loading: boolean = false;
 
-  constructor(private messageService: MessageService) {
+  constructor(
+    private messageService: MessageService,
+    private confirmService: ConfirmService
+  ) {
     this.messagesParams = this.messageService.messageParams;
   }
 
@@ -35,10 +39,19 @@ export class MessagesComponent implements OnInit {
   }
 
   deleteMessage(id: number, $event: PointerEvent) {
-    this.messageService.deleteMessage(id).subscribe(() => {
-      this.messages = this.messages.filter((msg) => msg.id !== id);
-      this.loadMessages();
-    });
+    this.confirmService
+      .confirm(
+        'Confirm Delete',
+        'This action can not be undone, the other person will swill be able to see the message'
+      )
+      .subscribe(
+        (confirmation) =>
+          confirmation &&
+          this.messageService.deleteMessage(id).subscribe(() => {
+            this.messages = this.messages.filter((msg) => msg.id !== id);
+            this.loadMessages();
+          })
+      );
     $event.stopPropagation();
   }
 

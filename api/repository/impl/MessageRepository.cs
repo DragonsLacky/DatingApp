@@ -63,9 +63,9 @@ public class MessageRepository : IMessageRepository
     {
         var query = _context.Messages
                 .OrderByDescending(msg => msg.MessageSent)
+                .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
                 .AsQueryable()
-                .FilterByContainer(messageParams)
-                .ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
+                .FilterByContainer(messageParams);
 
         return await PagedList<MessageDto>.CreateAsync(query, messageParams.PageNumber, messageParams.PageSize);
     }
@@ -73,8 +73,6 @@ public class MessageRepository : IMessageRepository
     public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername)
     {
         var messages = await _context.Messages
-            .Include(u => u.Sender).ThenInclude(u => u.Photos)
-            .Include(u => u.Recipient).ThenInclude(u => u.Photos)
             .Where
             (
                 m =>
@@ -86,6 +84,7 @@ public class MessageRepository : IMessageRepository
                 && !m.SenderDeleted)
             )
             .OrderByDescending(m => m.MessageSent)
+            .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
 
         var unreadMessages = messages.Where(m => m.DateRead == null && m.RecipientUsername == currentUsername).ToList();
@@ -93,20 +92,13 @@ public class MessageRepository : IMessageRepository
         if (unreadMessages.Any())
         {
             unreadMessages.ForEach(msg => msg.DateRead = DateTime.UtcNow);
-
-            await _context.SaveChangesAsync();
         }
 
-        return _mapper.Map<IEnumerable<MessageDto>>(messages);
+        return messages;
     }
 
     public void RemoveConnection(Connection connection)
     {
         _context.Connections.Remove(connection);
-    }
-
-    public async Task<bool> SaveAllAsync()
-    {
-        return await _context.SaveChangesAsync() > 0;
     }
 }

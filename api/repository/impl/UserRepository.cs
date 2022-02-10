@@ -57,16 +57,19 @@ public class UserRepository : IUserRepository
                         .SingleOrDefaultAsync(user => user.UserName == username);
     }
 
+    public async Task<string> GetUserGender(string username)
+    {
+        return await _context.Users
+            .Where(u => u.UserName == username)
+            .Select(u => u.Gender)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<IEnumerable<AppUser>> GetUsersAsync()
     {
         return await _context.Users
                         .Include(user => user.Photos)
                         .ToListAsync();
-    }
-
-    public async Task<bool> SaveAllAsync()
-    {
-        return await _context.SaveChangesAsync() > 0;
     }
 
     public void Update(AppUser user)
