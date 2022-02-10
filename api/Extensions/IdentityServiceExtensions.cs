@@ -34,6 +34,18 @@ public static class IdentityServiceExtensions
                         ValidateIssuer = false,
                         ValidateAudience = false,
                     };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            context.Token = !string.IsNullOrEmpty(accessToken)
+                                            && context.HttpContext.Request.Path.StartsWithSegments("/hubs")
+                                            ? accessToken
+                                            : context.Token;
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
         services.AddAuthorization(options =>

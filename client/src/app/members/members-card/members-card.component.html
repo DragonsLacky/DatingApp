@@ -10,7 +10,7 @@
       <li class="list-inline-item">
         <button
           class="btn btn-primary btn-sm"
-          routerLink="/members/{{ member.userName }}"
+          routerLink="/members/{{ member.username }}"
         >
           <i class="fa fa-user"></i>
         </button>
@@ -22,7 +22,7 @@
       </li>
       <li class="list-inline-item">
         <button
-          routerLink="/members/{{ member.userName }}"
+          routerLink="/members/{{ member.username }}"
           [queryParams]="{ tab: 3 }"
           class="btn btn-primary btn-sm"
         >
@@ -33,7 +33,13 @@
   </div>
   <div class="card-body">
     <h6 class="card-title text-center mb-1">
-      <i class="fa fa-user mr-2"></i>
+      <i
+        [ngClass]="{
+          'text-success': (getOnlineStatus(member.username) | async),
+          'text-muted': !(getOnlineStatus(member.username) | async)
+        }"
+        class="fa fa-user mr-2"
+      ></i>
       {{ member.knownAs }}, {{ member.age }}
     </h6>
     <p class="card-text text-muted text-center">{{ member.city }}</p>

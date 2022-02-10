@@ -8,6 +8,7 @@ import { sleep } from '../helpers/general';
 import { LoginModalComponent } from '../modals/login-modal/login-modal.component';
 import { RegisterModalComponent } from '../modals/register-modal/register-modal.component';
 import { User } from '../models/user';
+import { PresenceService } from './presence.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,11 @@ export class AccountService {
   private currentUserSource = new ReplaySubject<User>(1);
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private http: HttpClient, private modalService: BsModalService) {}
+  constructor(
+    private http: HttpClient,
+    private modalService: BsModalService,
+    private presenceService: PresenceService
+  ) {}
 
   login(model: any) {
     return this.http
@@ -30,6 +35,7 @@ export class AccountService {
         map((user: User) => {
           if (user) {
             this.setCurrentUser(user);
+            this.presenceService.startHubConnection(user);
           }
           return user;
         })
@@ -39,7 +45,14 @@ export class AccountService {
   register(model: any) {
     return this.http
       .post(`${this.baseUrl}/${this.controller}/register`, model)
-      .pipe(map((user: User) => this.setCurrentUser(user)));
+      .pipe(
+        map((user: User) => {
+          if (user) {
+            this.setCurrentUser(user);
+            this.presenceService.startHubConnection(user);
+          }
+        })
+      );
   }
 
   setCurrentUser(user: User) {
@@ -60,6 +73,7 @@ export class AccountService {
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+    this.presenceService.stopHubConnection();
   }
 
   openLoginModal() {
@@ -81,7 +95,7 @@ export class AccountService {
   }
 
   switchModalDialog(dialogId: string) {
-    if(dialogId === this.loginModalId){
+    if (dialogId === this.loginModalId) {
       this.closeLoginModal();
       sleep(400).then(() => this.openRegisterModal());
     } else {

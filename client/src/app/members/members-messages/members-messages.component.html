@@ -2,7 +2,7 @@
   <div class="row h-100 flex-column">
     <div class="col">
       <div
-        *ngIf="messages?.length <= 0"
+        *ngIf="(messageService.messageThread$ | async)?.length <= 0"
         class="h-100 d-flex flex-column justify-content-center align-items-center"
       >
         <span class="h4"
@@ -10,29 +10,31 @@
         >
       </div>
       <div
-        *ngIf="messages?.length > 0"
+        *ngIf="(messageService.messageThread$ | async)?.length > 0"
         style="gap: 2em; height: 40em"
         class="d-flex flex-column-reverse overflow-auto px-3"
       >
         <div
           [ngClass]="{
-            'justify-content-start': message.recipientUsername !== username,
-            'justify-content-end': message.recipientUsername === username
+            'justify-content-start':
+              message.recipientUsername !== member.username,
+            'justify-content-end': message.recipientUsername === member.username
           }"
           class="d-flex"
-          *ngFor="let message of messages"
+          *ngFor="let message of messageService.messageThread$ | async"
         >
           <div
             [ngClass]="{
-              'align-items-baseline': message.recipientUsername !== username,
-              'align-items-end': message.recipientUsername === username
+              'align-items-baseline':
+                message.recipientUsername !== member.username,
+              'align-items-end': message.recipientUsername === member.username
             }"
             class="d-flex flex-column"
           >
             <p
               [ngClass]="{
-                'bg-secondary': message.recipientUsername !== username,
-                'bg-info': message.recipientUsername === username
+                'bg-secondary': message.recipientUsername !== member.username,
+                'bg-info': message.recipientUsername === member.username
               }"
               class="m-0 text-white"
             >
@@ -56,7 +58,7 @@
         </div>
       </div>
     </div>
-    <div class="col h-100" >
+    <div class="col h-100">
       <form
         [formGroup]="registerForm"
         (ngSubmit)="registerForm.valid && sendMessage()"

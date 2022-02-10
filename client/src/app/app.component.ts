@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from './models/user';
 import { AccountService } from './services/account.service';
+import { PresenceService } from './services/presence.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,8 @@ export class AppComponent implements OnInit {
   users: any;
 
   constructor(
-    private accountService: AccountService
+    private accountService: AccountService,
+    private presenceService: PresenceService
   ) {}
 
   ngOnInit() {
@@ -22,8 +24,9 @@ export class AppComponent implements OnInit {
 
   setCurrentUser() {
     const user: User = JSON.parse(localStorage.getItem('user'));
-    this.accountService.setCurrentUser(user);
+    if (user) {
+      this.accountService.setCurrentUser(user);
+      this.presenceService.startHubConnection(user);
+    }
   }
-
-  
 }

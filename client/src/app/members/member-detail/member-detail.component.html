@@ -8,6 +8,21 @@
       />
       <div class="card-body">
         <div>
+          <h1 class="h5">
+            <i
+              [ngClass]="{
+                'fa-circle text-success':
+                  (getOnlineStatus(member.username) | async),
+                'fa-circle-o text-muted': !(
+                  getOnlineStatus(member.username) | async
+                )
+              }"
+              class="fa"
+            ></i>
+            {{ member.knownAs }}
+          </h1>
+        </div>
+        <div>
           <strong>Location:</strong>
           <p>{{ member.city }}, {{ member.country }}</p>
         </div>
@@ -66,7 +81,8 @@
       >
         <app-members-messages
           *ngIf="messageTabActive"
-          [username]="member.userName"
+          [username]="member.username"
+          [member]="member"
         ></app-members-messages>
       </tab>
     </tabset>

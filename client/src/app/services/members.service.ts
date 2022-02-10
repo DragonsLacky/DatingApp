@@ -48,7 +48,6 @@ export class MembersService {
   }
 
   getMembers(userParams: UserParams) {
-    console.log(this.membersCache);
     let cachedMembers = this.membersCache.get(userParams.key());
     if (cachedMembers) {
       return of(cachedMembers);
@@ -70,7 +69,7 @@ export class MembersService {
   getMember(username: string): Observable<Member> {
     const member = [...this.membersCache.values()]
       .reduce((res, { items }) => [...res, ...items], [])
-      .find((member: Member) => member.userName === username);
+      .find((member: Member) => member.username === username);
 
     if (member) return of(member);
 
@@ -83,7 +82,7 @@ export class MembersService {
     return this.http.put(`${this.baseUrl}/${this.controller}`, member).pipe(
       map(() => {
         [...this.membersCache.entries()].map(([key, { items }]) => {
-          const index = items.findIndex((m) => m.userName === member.userName);
+          const index = items.findIndex((m) => m.username === member.username);
           this.membersCache.get(key).items[index] = member;
         });
       })

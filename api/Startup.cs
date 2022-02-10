@@ -2,6 +2,7 @@ using System;
 using api.data;
 using api.Entities.properties;
 using api.Extensions;
+using api.messaging;
 using api.middleware;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi.Models;
@@ -24,6 +25,7 @@ namespace API
             services.AddIdentityServices(_config);
             services.AddControllers();
             services.AddCors();
+            services.AddSignalR();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
@@ -66,6 +68,7 @@ namespace API
                     policy
                         .AllowAnyHeader()
                         .AllowAnyMethod()
+                        .AllowCredentials()
                         .WithOrigins(
                             _config
                             .GetSection(nameof(ClientProperties))
@@ -80,6 +83,8 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<PresenceHub>("hubs/presence");
+                endpoints.MapHub<MessageHub>("hubs/messages");
             });
         }
     }

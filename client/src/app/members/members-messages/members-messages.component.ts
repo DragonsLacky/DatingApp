@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { Member } from 'src/app/models/member';
 import { Message } from 'src/app/models/message';
+import { User } from 'src/app/models/user';
+import { AccountService } from 'src/app/services/account.service';
 import { MessageService } from 'src/app/services/message.service';
 
 @Component({
@@ -11,40 +13,52 @@ import { MessageService } from 'src/app/services/message.service';
   styleUrls: ['./members-messages.component.css'],
 })
 export class MembersMessagesComponent implements OnInit {
-  @Input() username: string;
+  @Input() member: Member;
   messages: Message[] = [];
   registerForm: FormGroup;
+  user: User;
 
   constructor(
-    private messageService: MessageService,
-    private formBuilderService: FormBuilder
+    public messageService: MessageService,
+    private formBuilderService: FormBuilder,
+    private accountService: AccountService
   ) {}
 
   ngOnInit(): void {
-    this.loadMessages();
+    this.loadUser();
+    this.connectToThread();
     this.initializeForm();
   }
 
   initializeForm() {
     this.registerForm = this.formBuilderService.group({
       content: [''],
-      recipientUsername: [this.username],
+      recipientUsername: [this.member.username],
     });
+  }
+
+  loadUser() {
+    this.accountService.currentUser$
+      .pipe(take(1))
+      .subscribe((user) => (this.user = user));
   }
 
   loadMessages() {
     this.messageService
-      .getMessageThread(this.username)
+      .getMessageThread(this.member.username)
       .pipe(take(1))
       .subscribe((response) => {
         this.messages = response;
       });
   }
 
+  connectToThread() {
+    this.messageService.startConnection(this.user, this.member.username);
+  }
+
   sendMessage() {
-    this.messageService
-      .sendMessage(this.registerForm.value)
-      .pipe(take(1))
-      .subscribe((response) => (this.messages = [response, ...this.messages]));
+    this.messageService.sendMessage(this.registerForm.value).then(() =>
+      this.registerForm.controls['content'].reset()
+    );
   }
 }

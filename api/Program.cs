@@ -24,7 +24,6 @@ namespace API
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception);
                 var logger = services.GetRequiredService<Logger<Program>>();
                 logger.LogError(exception, "An error occurred during migration");
             }
