@@ -16,18 +16,22 @@ public class Seed
         var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
         if (users == null) return;
 
-        AppRoleEnum.GetNames<AppRoleEnum>().Select(role => new AppRole(role)).ToList().ForEach(async role => await roleManager.CreateAsync(role));
+        foreach (var role in AppRoleEnum.GetNames<AppRoleEnum>().Select(role => new AppRole(role)).ToList())
+        {
+            await roleManager.CreateAsync(role);
+        }
+
 
         var memberRole = AppRoleEnum.GetName<AppRoleEnum>(AppRoleEnum.Member);
         var modRole = AppRoleEnum.GetName<AppRoleEnum>(AppRoleEnum.Mod);
         var adminRole = AppRoleEnum.GetName<AppRoleEnum>(AppRoleEnum.Admin);
 
-        users.ForEach(async (user) =>
+        foreach (var user in users)
         {
             user.UserName = user.UserName.ToLower();
             await userManager.CreateAsync(user, "P@ss10");
             await userManager.AddToRoleAsync(user, memberRole);
-        });
+        }
 
         var admin = new AppUser
         {

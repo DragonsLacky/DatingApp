@@ -33,6 +33,7 @@ public static class IdentityServiceExtensions
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"])),
                         ValidateIssuer = false,
                         ValidateAudience = false,
+                        
                     };
                     options.Events = new JwtBearerEvents
                     {

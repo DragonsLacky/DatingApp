@@ -31,8 +31,8 @@ public class UserRepository : IUserRepository
     public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
     {
 
-        var minAge = DateTime.Today.AddYears(-userParams.MaxAge - 1);
-        var maxAge = DateTime.Today.AddYears(-userParams.MinAge);
+        var minAge = DateTime.Today.AddYears(-userParams.MaxAge - 1).ToUniversalTime();
+        var maxAge = DateTime.Today.AddYears(-userParams.MinAge).ToUniversalTime();
 
         var query = _context.Users
                         .AsQueryable()

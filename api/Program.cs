@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using api.data;
 using api.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -24,8 +25,7 @@ namespace API
             }
             catch (Exception exception)
             {
-                var logger = services.GetRequiredService<Logger<Program>>();
-                logger.LogError(exception, "An error occurred during migration");
+                Console.WriteLine($"Fail: An error occurred during migration, {new StackTrace(exception, true)}");
             }
             await host.RunAsync();
         }
