@@ -63,18 +63,21 @@ namespace API
 
             app.UseRouting();
 
-            app.UseCors(
-                policy =>
-                    policy
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials()
-                        .WithOrigins(
-                            _config
-                            .GetSection(nameof(ClientProperties))
-                            .Get<ClientProperties>().BaseClientUrl
-                            )
-                );
+            if (env.IsDevelopment())
+            {
+                app.UseCors(
+                    policy =>
+                        policy
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials()
+                            .WithOrigins(
+                                _config
+                                .GetSection(nameof(ClientProperties))
+                                .Get<ClientProperties>().BaseClientUrl
+                                )
+                    );
+            }
 
             app.UseAuthentication();
 
