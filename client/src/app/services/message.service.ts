@@ -12,6 +12,7 @@ import { User } from '../models/user';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Group } from '../models/group';
+import { LoadingService } from './loading.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,10 @@ export class MessageService {
   private messageThreadSource = new BehaviorSubject<Message[]>([]);
   messageThread$ = this.messageThreadSource.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private loadingService: LoadingService
+  ) {}
   messageParams: MessageParams = new MessageParams();
 
   getMessages() {
@@ -38,8 +42,12 @@ export class MessageService {
   }
 
   startConnection(user: User, otherUsername: string) {
+    this.loadingService.loading();
     this.hubConnection = this.createHubConnection(otherUsername, user.token);
-    this.hubConnection.start().catch((error) => console.log(error));
+    this.hubConnection
+      .start()
+      .catch((error) => console.log(error))
+      .finally(() => this.loadingService.idle());
     this.attachListeners(otherUsername);
   }
 
@@ -75,6 +83,7 @@ export class MessageService {
 
   stopHubConnection() {
     if (this.hubConnection) {
+      this.messageThreadSource.next([]);
       this.hubConnection.stop().catch((error) => console.log(error));
     }
   }

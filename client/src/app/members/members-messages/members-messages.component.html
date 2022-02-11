@@ -3,7 +3,8 @@
     <div class="col">
       <div
         *ngIf="(messageService.messageThread$ | async)?.length <= 0"
-        class="h-100 d-flex flex-column justify-content-center align-items-center"
+        class="d-flex flex-column justify-content-center align-items-center"
+        style="height: 40em"
       >
         <span class="h4"
           >No messages yet... say hit using the field bellow</span
