@@ -17,6 +17,7 @@ export class MembersMessagesComponent implements OnInit {
   messages: Message[] = [];
   registerForm: FormGroup;
   user: User;
+  loading = false;
 
   constructor(
     public messageService: MessageService,
@@ -57,8 +58,10 @@ export class MembersMessagesComponent implements OnInit {
   }
 
   sendMessage() {
-    this.messageService.sendMessage(this.registerForm.value).then(() =>
-      this.registerForm.controls['content'].reset()
-    );
+    this.loading = true;
+    this.messageService
+      .sendMessage(this.registerForm.value)
+      .then(() => this.registerForm.controls['content'].reset())
+      .finally(() => (this.loading = false));
   }
 }
