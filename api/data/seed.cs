@@ -29,8 +29,8 @@ public class Seed
         foreach (var user in users)
         {
             user.UserName = user.UserName.ToLower();
-            await userManager.CreateAsync(user, "P@ss10");
-            await userManager.AddToRoleAsync(user, memberRole);
+            // await userManager.CreateAsync(user, "P@ss10");
+            // await userManager.AddToRoleAsync(user, memberRole);
         }
 
         var admin = new AppUser
