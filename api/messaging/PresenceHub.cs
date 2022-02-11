@@ -24,7 +24,7 @@ public class PresenceHub : Hub
         await Clients.Caller.SendAsync("GetOnlineUsers", currentUsers);
     }
 
-    public override async Task OnDisconnectedAsync(Exception? exception)
+    public override async Task OnDisconnectedAsync(Exception exception)
     {
         if (await _tracker.UserDisconnected(Context.User.GetUsername(), Context.ConnectionId))
         {

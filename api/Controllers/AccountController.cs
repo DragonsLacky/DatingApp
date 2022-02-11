@@ -1,13 +1,3 @@
-using api.DTO;
-using api.Dtos;
-using api.Entities;
-using api.Entities.enums;
-using api.Interface;
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
 namespace api.Controllers;
 
 

@@ -1,6 +1,3 @@
-using api.helpers;
-using Microsoft.AspNetCore.Mvc;
-
 namespace api.Controllers;
 
 [ApiController]

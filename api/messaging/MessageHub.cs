@@ -44,7 +44,7 @@ public class MessageHub : Hub
         await Clients.Caller.SendAsync("ReceiveMessageThread", messages);
     }
 
-    public override async Task OnDisconnectedAsync(Exception? exception)
+    public override async Task OnDisconnectedAsync(Exception exception)
     {
         var group = await RemoveFromMessageGroup();
         await Clients.Group(group.Name).SendAsync("UpdatedGroup", group);

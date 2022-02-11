@@ -5,7 +5,7 @@ namespace api.DTO;
 public class RegisterDto
 {
     [Required]
-    public string? UserName { get; set; }
+    public string UserName { get; set; }
 
     [Required]
     public string KnownAs { get; set; }
@@ -24,5 +24,5 @@ public class RegisterDto
 
     [Required]
     [StringLength(8, MinimumLength = 4)]
-    public string? Password { get; set; }
+    public string Password { get; set; }
 }

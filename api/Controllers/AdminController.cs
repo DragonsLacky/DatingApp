@@ -1,10 +1,3 @@
-using System.Net;
-using api.Entities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
 namespace api.Controllers;
 
 public class AdminController : BaseApiController
