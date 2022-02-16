@@ -66,33 +66,6 @@
     <Compile Remove="Interface\IPhotoService.cs" />
     <Compile Remove="middleware\AuthorizationHeaderParameterOperationFilter.cs" />
     <Compile Remove="services\PhotoService.cs" />
-    <Compile Remove="Controllers\AccountController.cs" />
-    <Compile Remove="Controllers\AdminController.cs" />
-    <Compile Remove="Controllers\BaseApiController.cs" />
-    <Compile Remove="Controllers\BuggyController.cs" />
-    <Compile Remove="Controllers\FallbackController.cs" />
-    <Compile Remove="Controllers\LikesController.cs" />
-    <Compile Remove="Controllers\MessagesController.cs" />
-    <Compile Remove="GlobalUsings.cs" />
-    <Compile Remove="Program.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers" />
-    <Folder Include="data\database" />
-    <Folder Include="data\Migrations" />
-    <Folder Include="Dtos" />
-    <Folder Include="Entities\enums" />
-    <Folder Include="Entities\properties" />
-    <Folder Include="errors" />
-    <Folder Include="Extensions" />
-    <Folder Include="helpers" />
-    <Folder Include="Interface" />
-    <Folder Include="messaging" />
-    <Folder Include="middleware" />
-    <Folder Include="repository\impl" />
-    <Folder Include="repository\interfaces" />
-    <Folder Include="services" />
   </ItemGroup>
 
   <ItemGroup>
@@ -100,10 +73,19 @@
     <Content Remove="wwwroot\3rdpartylicenses.txt" />
     <Content Remove="wwwroot\fontawesome-webfont.da909aa098b0ee2d.svg" />
     <Content Remove="wwwroot\index.html" />
+    <Content Remove="wwwroot\main.3cf9b6e25d41bf96.js" />
     <Content Remove="wwwroot\polyfills.3fe83b71b6f1b643.js" />
     <Content Remove="wwwroot\runtime.01fec06f14767966.js" />
     <Content Remove="wwwroot\styles.560d7dabb31d7685.css" />
-    <Content Remove="appsettings.Development.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="data\userSeedData.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.csproj" />
+    <ProjectReference Include="..\Service\Service.csproj" />
   </ItemGroup>
 
 </Project>
